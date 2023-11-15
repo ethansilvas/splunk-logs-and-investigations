@@ -33,8 +33,23 @@ With the fields command I conduct a search on all Sysmon events with EventCode 1
 
 ![](Images/Pasted%20image%2020231114155715.png)
 
+Another useful command is **table** which can be used to change the display of the results into a table with the desired columns. 
 
+With the Sysmon EventCode 1 results I create a table that only displays the time, host, and image fields:
 
+![](Images/Pasted%20image%2020231114160243.png)
+
+If I wanted to use a different name for a field then I can use the command **rename** to change it in the results. For example, I can change the Image field to be "Process":
+
+![](Images/Pasted%20image%2020231114160616.png)
+
+![](Images/Pasted%20image%2020231114161104.png)
+
+Another handy command is **dedup** which deletes all duplicate events based on a specified field:
+
+In the last results where I renamed Image to be Process, each value had many counts, but with dedup many of them are filtered out:
+
+![](Images/Pasted%20image%2020231114161411.png)
 
 
 
