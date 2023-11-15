@@ -59,7 +59,33 @@ The **stats** command allows me to compute statistical operations on the results
 
 ![](Images/Pasted%20image%2020231114162739.png)
 
+To further expand on the data visualization aspect of SPL, there is the **chart** command that is very similar to **stats** but outputs the results into a table-like data visualization.
+
+I can create a chart with the previous example of taking the count of events that and Image created at a specific time:
+
+![](Images/Pasted%20image%2020231114163336.png)
+
+If I needed to further redefine or create a new field from an existing field I can use **eval**. For example, if I wanted the output of the Image field but in all lower case I could create a new field and set its results to the lower case version of Image. 
+
+`eval Process_Path=lower(Image)` will create a new field called "Process_Path" and uses the lower case function with the Image field as input to set the new field equal to the lower case results of the Image field:
+
+![](Images/Pasted%20image%2020231114164225.png)
+
+I can also extract new fields from existing ones using regular expressions through the **rex** command. 
+
+`[^%](?<guid>{.*})` is a regular expression that: 
+- Excludes anything that starts with %
+- Creates a named capture group called "guid" that assigns the name to anything in between curly braces and isn't a new line character
+
+This will create a new field called "guid" that I can then use in further commands. Using the new field I will create a table that shows all the extracted data: 
+
+![](Images/Pasted%20image%2020231114171735.png)
 
 
 ## Splunk Applications
+
+
+## Notes 
+
+rex max_match=0 will capture all occurrences, default is only the first occurrence
 
