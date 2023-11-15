@@ -102,6 +102,18 @@ With these commands I have now extracted all the file names found in the Splunk 
 
 ![](Images/Pasted%20image%2020231114173800.png)
 
+There is an alternate way I could do this command which replaces the rex with **mvdedup** and **mvindex** to split the full file paths by backslashes and take the last index, which is the filename. 
+
+`eval filename=mvdedup(split(Image, "\\"))` = split up the file names from the Image field using the backslashes and remove any duplicates
+
+`eval filename=mvindex(filename, -1)` = select the last index which will be the filename 
+
+The rest is similar to the rex version minus the duplicates and the results are the same:
+
+![](Images/Pasted%20image%2020231114182336.png)
+
+
+
 ## Splunk Applications
 
 
