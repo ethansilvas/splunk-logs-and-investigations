@@ -193,7 +193,16 @@ Then I can do a search on Event Code 4768 that counts all the Account_Name field
 
 ![](Images/Pasted%20image%2020231115145321.png)
 
-#### Q2. 
+The account named "waldo" submitted the highest number of Kerberos authentication requests. 
+#### Q2. Find the number of distinct computers accessed by the account name SYSTEM in all Event Code 4624 events
+
+Since this query is much more specific I can instantly grab this info by getting all events with Event Code 4624 and that have the Account_Name SYSTEM, then using dedup to get all of the unique ComputerName values:
+
+![](Images/Pasted%20image%2020231115151727.png)
+
+This returns 10 results which means that the SYSTEM account accessed 10 unique computers in the 4624 events. 
+
+#### Q3. 
 ## Splunk Applications
 
 
