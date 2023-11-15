@@ -51,6 +51,14 @@ In the last results where I renamed Image to be Process, each value had many cou
 
 ![](Images/Pasted%20image%2020231114161411.png)
 
+With the **sort** command I can sort the results in ascending or descending order based on a specified field. Here I sort the results by the time they occurred and in descending order so I can see the most recent results:
+
+![](Images/Pasted%20image%2020231114161715.png)
+
+The **stats** command allows me to compute statistical operations on the results to better organize/visualize it. Using the **count** operation I compile the results to show the number of times that each Image created an event at a certain time:
+
+![](Images/Pasted%20image%2020231114162739.png)
+
 
 
 ## Splunk Applications
