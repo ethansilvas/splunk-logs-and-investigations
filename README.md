@@ -175,7 +175,11 @@ Another way to find uncommon events is with the **rare** command. Here I get the
 
 ![](Images/Pasted%20image%2020231115132715.png)
 
+The command **sistats** can also be used to explore event diversity and extract info about common/uncommon events. 
 
+With this command I count the number events based on index, sourcetype, source, and host to get a big picture analysis of the events:
+
+![](Images/Pasted%20image%2020231115133904.png)
 
 ## Splunk Applications
 
