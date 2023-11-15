@@ -112,6 +112,14 @@ The rest is similar to the rex version minus the duplicates and the results are 
 
 ![](Images/Pasted%20image%2020231114182336.png)
 
+Transactions in Splunk are used to group events that share common characteristics. With the **transaction** command I can group events based on certain fields like Image. 
+
+`| transaction Image startswith=eval(EventCode=1) endswith=eval(EventCode=3) maxspan=1m` = creates a transaction of events within 1 minute of each other that start with an event with EventCode 1 and ends with an event with EventCode 3
+
+After removing the duplicate values I can identify programs that all created certain types of events within 1 minute of each other: 
+
+![](Images/Pasted%20image%2020231114201941.png)
+
 
 
 ## Splunk Applications
