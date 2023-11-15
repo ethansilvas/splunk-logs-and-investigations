@@ -81,6 +81,26 @@ This will create a new field called "guid" that I can then use in further comman
 
 ![](Images/Pasted%20image%2020231114171735.png)
 
+Splunk **Lookups** can add to the results of a query by matching fields in the results to fields in lookup files. 
+
+I have created a file called malware_lookup.csv that holds fields matching files to whether or not they are malware. This will act as a lookup table file that I can use with the data to do a lookup on known malicious files. 
+
+![](Images/Pasted%20image%2020231114172240.png)
+
+After adding malware_lookup.csv to the Lookup files in Splunk's settings, I am now ready to use it with the **lookup** command. 
+
+First, I do some results manipulation by extracting all the names of the files listed in the Image field, converting them to lower case, and then storing the results into a new field called "filename":
+
+`| rex field=Image "(?P<filename>[^\\\]+)$"` = extract new filename field 
+`| eval filename=lower(filename)` = converts all of the results for the filename field to lower case
+
+Now I can compare the values of the new filename field to the malware_lookup.csv (which has a matching filename column) to see if any of the found files are known malware. 
+
+`| lookup malware_lookup.csv filename OUTPUTNEW is_malware` = uses the newly created filename Splunk field as a key to lookup the column filename in malware_lookup.csv and then outputs the corresponding "is_malware" value into a new Splunk field with the same name 
+
+With these commands I have now extracted all the file names found in the Splunk Image field and compared them against a list of known malicious files to see which ones were found in my data:
+
+![](Images/Pasted%20image%2020231114173800.png)
 
 ## Splunk Applications
 
