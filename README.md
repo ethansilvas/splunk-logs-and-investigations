@@ -181,6 +181,19 @@ With this command I count the number events based on index, sourcetype, source, 
 
 ![](Images/Pasted%20image%2020231115133904.png)
 
+### Practice Queries
+
+#### Q1. Find the account name with the highest amount of Kerberos authentication ticket requests
+
+Since I don't know which Event Code the Kerberos authentication ticket request is, I do a simple search for "kerberos authentication" to see that it is 4768:
+
+![](Images/Pasted%20image%2020231115145057.png)
+
+Then I can do a search on Event Code 4768 that counts all the Account_Name field values, puts them into a table, and sorts to see the highest count account:
+
+![](Images/Pasted%20image%2020231115145321.png)
+
+#### Q2. 
 ## Splunk Applications
 
 
