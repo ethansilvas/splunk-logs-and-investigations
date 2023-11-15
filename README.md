@@ -120,6 +120,25 @@ After removing the duplicate values I can identify programs that all created cer
 
 ![](Images/Pasted%20image%2020231114201941.png)
 
+Finally, I use SPL's capability to do subsearches to filter out large sets of data. I start by creating a very simple search to get all Sysmon events with EventCode 1. 
+
+Using the logical NOT keyword I can filter out all the results of a subsearch from the results of this main search:
+
+```
+NOT
+	[ search index="main" sourcetype="WinEventLog:Sysmon" EventCode=1
+	| top limit=100 Image
+	| fields Image ]
+```
+
+The subsearch will find all Sysmon events with Event Code 1 and returns only the 100 most common values of the Image field. Therefore, all of these results will be removed from the main search:
+
+![](Images/Pasted%20image%2020231114202755.png)
+
+Filtering out these events will result in a search that provides a look into some of the Event Code 1 events that feature more rare and unique instances of programs being used. 
+
+### Identify Available Data
+
 
 
 ## Splunk Applications
