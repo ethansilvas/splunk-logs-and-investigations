@@ -139,6 +139,42 @@ Filtering out these events will result in a search that provides a look into som
 
 ### Identify Available Data
 
+To first get an idea of all the indexes I have in my data set I use **eventcount** with `summarize=false` to create a table of each one: 
+
+![](Images/Pasted%20image%2020231115122829.png)
+
+Then I can use **metadata** to view all of the different sourcetype objects (ex: Sysmon) that have created events in my data:
+
+![](Images/Pasted%20image%2020231115123122.png)
+
+I can use similar commands to view all the hosts and get info about the sources: 
+
+![](Images/Pasted%20image%2020231115123308.png)
+
+![](Images/Pasted%20image%2020231115123453.png)
+
+Once I know the different sourcetypes, I can view their raw event data in a table with `table _raw`:
+
+![](Images/Pasted%20image%2020231115125429.png)
+
+For information on the types of fields a sourcetype has I can use the **fieldsummary** command:
+
+![](Images/Pasted%20image%2020231115130408.png)
+
+I can further filter the results based on some of the returned stats from fieldsummary:
+
+![](Images/Pasted%20image%2020231115133511.png)
+
+For time based queries, the **bucket** command can group together events and then computing stats on them makes it easy to view summaries of defined time periods. 
+
+In this query I bucket all events into singular days and compute the counts of each sourcetype in each index:
+
+![](Images/Pasted%20image%2020231115131904.png)
+
+Another way to find uncommon events is with the **rare** command. Here I get the top 10 least common combinations of index and sourcetype:
+
+![](Images/Pasted%20image%2020231115132715.png)
+
 
 
 ## Splunk Applications
