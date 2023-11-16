@@ -201,7 +201,44 @@ Since this query is much more specific I can instantly grab this info by getting
 ![](Images/Pasted%20image%2020231115151727.png)
 
 This returns 10 results which means that the SYSTEM account accessed 10 unique computers in the 4624 events. 
-## Splunk Applications
+
+## Splunk Applications - Sysmon
+
+To get an idea for the usefulness and functionality that Splunk applications provide, I will be using the [Sysmon App for Splunk](https://splunkbase.splunk.com/app/3544). 
+
+Once I've downloaded it into my instance of Splunk Enterprise, I can see that the app is functioning and I can view all of its tools with the toolbar:
+
+![](Images/Pasted%20image%2020231115191033.png)
+
+In the **File Activity** section I can view all the files that have been created in my dataset:
+
+![](Images/Pasted%20image%2020231115191015.png)
+
+However, there is no data in the "Top Systems" section because the search that the app is using isn't compatible with my data:
+
+![](Images/Pasted%20image%2020231115191114.png)
+
+Using the UI I can edit the search manually and manually make it compatible as a normal Splunk search would function. 
+
+The issue in this example was that the search was originally `sysmon EventCode=11 | top Computer` but there isn't a field named "Computer" so I changed it to "ComputerName" to be accurate for my data:
+
+![](Images/Pasted%20image%2020231115191220.png)
+
+Now the "Top Systems" section displays accurate data because the underlying search will actually return results:
+
+![](Images/Pasted%20image%2020231115191240.png)
+
+There are many instances like the above example where the downloaded app won't always be perfectly aligned with your data in terms of keywords and fields. I went ahead and made a few more changes to some of the searches that **Sysmon App for Splunk** was using. 
+
+In this example, there was a report that the app wanted to make to show the amount of network connections being made by an application. Many of the fields and search terms that it was using were incompatible with my data:
+
+![](Images/Pasted%20image%2020231115195749.png)
+
+To make this search more functional I wanted to fix it so that I could see the number of network connections made by the app **SharpHound.exe**. 
+
+There were many fields to edit such as protocol, dest_port, dest_host, and dest_ip, but after converting them to the most relevant alternative in my data I successfully found that the SharpHound app had made 6 network connections:
+
+![](Images/Pasted%20image%2020231115195725.png)
 
 
 ## Notes 
