@@ -201,8 +201,6 @@ Since this query is much more specific I can instantly grab this info by getting
 ![](Images/Pasted%20image%2020231115151727.png)
 
 This returns 10 results which means that the SYSTEM account accessed 10 unique computers in the 4624 events. 
-
-#### Q3. 
 ## Splunk Applications
 
 
