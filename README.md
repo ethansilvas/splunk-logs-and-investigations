@@ -452,3 +452,45 @@ Since I don't know which of the IPs connected to the compromised machine, I simp
 
 From these results I can conclude that the C2 IP 10.0.0.186 used the Remote Desktop Protocol port 3389 to connect to the compromised machines. 
 
+## Detecting Attacker TTPs
+
+Using attacker TTPs to create searches and alerts involves both searching for known behavior and searching for abnormal behavior. This section will cover creating searches based on attacker behavior. 
+
+### Crafting SPL Searches Based on Known TTPs
+
+Attackers often use Windows binaries like net.exe for reconnaissance activities to find privilege escalation and lateral movement opportunities. To target this behavior I use Sysmon event code 1 and look for command line usage that can give info on a host or network:
+
+![](Images/Pasted%20image%2020231117145212.png)
+
+Searching for malicious payload requests can be done by looking at requests for common whitelisted sites that attackers use to host their payloads, like **githubusercontent.com**. Sysmon event 22 for DNS queries can help me identify these occurences. 
+
+There is a QueryName field that I can use to search for githubusercontent.com requests:
+
+![](Images/Pasted%20image%2020231117145612.png)
+
+![](Images/Pasted%20image%2020231117145727.png)
+
+Several MITRE ATT&CK techniques use PsExec and its high-level permissions to conduct attacks. Some common Sysmon event codes that relate to these attacks are 13, 11, 17, and 18. 
+
+Leveraging event code 13, which is for registry value sets, takes a lot of involvement:
+
+![](Images/Pasted%20image%2020231117153244.png)
+
+`index="main" sourcetype="WinEventLog:Sysmon" EventCode=13 Image="C:\\Windows\\system32\\services.exe" TargetObject="HKLM\\System\\CurrentControlSet\\Services\\*\\ImagePath"` = this will isolate to event code 13, select the services.exe image which handles service creation, and grabs the TargetObject which are the registry keys that will be affected 
+
+`rex field=Details "(?<reg_file_name>[^\\\]+)$"` = grabs the file name from the Details field and stores it in a new field reg_file_name
+
+`eval reg_file_name = lower(reg_file_name), file_name = if(isnull(file_name), reg_file_name, lower(file_name))` = this converts reg_file_name to lower case, then modifies the file_name field so that if it is null it will be filled with reg_file_name and if not it keeps its original value and sets it to lower case as well
+
+`stats values(Image) AS Image, values(Details) AS RegistryDetails, values(\_time) AS EventTimes, count by file_name, ComputerName` = for each unique combination of file_name and Computer name,  this will extract all the unique values of Image, Details, TargetObject, and time
+
+This query will be able to tell me all the instances where **services.exe** modified the ImagePath value of a service. In the search results I have extracted the details of these modifications. 
+
+Using Sysmon event code 11 for file creation shows that there have been execution resembling PsExec:
+
+![](Images/Pasted%20image%2020231117154044.png)
+
+
+
+
+
