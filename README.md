@@ -406,3 +406,24 @@ I start by creating a target search to see all the events that have the source p
 
 From the search I extracted the unique call traces and found many DLLs being used. After a little research I found that one of the DLLs, comsvcs.dll, is actually a common dumping DLL. 
 
+#### Find any suspicious loads of clr.dll that could be C sharp injection/execute-assembly attacks, then find the suspicious process that was used to temporarily execute code
+
+First I will get an idea of all the types of events that include the phrase **clr.dll**. After a bit of searching I found that an important field I wanted to pay attention to was what processes were loading the clr.dll image:
+
+![](Images/Pasted%20image%2020231116211931.png)
+
+One way that I began to filter the results was to just see which images Sysmon correlated with process injection attacks:
+
+![](Images/Pasted%20image%2020231116212101.png)
+
+I got a lot of seemingly harmless results from Microsoft processes like Visual Studio, so I filtered some more: 
+
+![](Images/Pasted%20image%2020231116215321.png)
+
+Unsurprisingly I found that both notepad.exe and rundll32.exe, from my original DCSync alert, were also used to execute code. 
+
+#### Find the two IP addresses of the C2 callback server
+
+
+
+
