@@ -272,3 +272,73 @@ I start by taking a look at the number of events related to each of the Sysmon e
 
 ![](Images/Pasted%20image%2020231116135140.png)
 
+Event code 1 for process creation can be related to unusual parent-child trees and I begin looking for attacks with it:
+
+![](Images/Pasted%20image%2020231116170507.png)
+
+Some problematic child processes are **cmd.exe** and **powershell.exe** so I look for them in a search with the Image field:
+
+![](Images/Pasted%20image%2020231116171557.png)
+
+The original search has now been narrowed down to 628 events compared to 5,472. 
+
+Some of the more questionable results of these events are the ones where the problematic child processes are spawned from a **notepad.exe** parent process:
+
+![](Images/Pasted%20image%2020231116171739.png)
+
+I narrow down the search to focus on these 21 occurrences: 
+
+![](Images/Pasted%20image%2020231116171942.png)
+
+Looking at even the first event I can see that it involved a command line prompt where powershell is used to download a file from a server:
+
+![](Images/Pasted%20image%2020231116172134.png)
+
+Investigating the IP address that the file was downloaded from shows only two sourcetypes:
+
+![](Images/Pasted%20image%2020231116172323.png)
+
+Looking specifically at the syslog sourcetype I can see that the IP belongs to the host "waldo-virtual-machine" and it is using its ens160 interface:
+
+![](Images/Pasted%20image%2020231116172548.png)
+
+One of the events shows that a new address record has been created on the interface to form some form of communication with a Linux system:
+
+![](Images/Pasted%20image%2020231116174732.png)
+
+I also check the Sysmon related logs with the CommandLine field to investigate further:
+
+![](Images/Pasted%20image%2020231116174712.png)
+
+In these results we can see many commands being used to download files that are likely malicious, and it it also likely to be confirmed that the Linux system being connected to previously is infected. 
+
+If I add the count for the host field I can see that there were two hosts that were victims of the attack: 
+
+![](Images/Pasted%20image%2020231116175131.png)
+
+Based on the file name, it appears that one of the hosts was targeted with a DCSync attack using a powershell file:
+
+![](Images/Pasted%20image%2020231116175248.png)
+
+This type of attack is related to Active Directory and I can focus on this by looking at events with event code 4662. I also use a couple of specifiers that will show a couple of procedures that a DCSync attack uses: 
+
+`AccessMask=0x100` = this will appear when Control Access is requested which is needed for a DCSync attack because it requires high-level permissions
+
+`AccountName!=*$` = removes all results where the account being used is a service, so I only see instances where a user account was used for DCSync which is normally not allowed
+
+![](Images/Pasted%20image%2020231116180142.png)
+
+Looking into the two returned events I can see two GUIDs: 
+
+![](Images/Pasted%20image%2020231116180316.png)
+
+The first is for "DS-replication-Get-Changes-All":
+
+![](Images/Pasted%20image%2020231116180438.png)
+
+From the documentation I can see that the purpose of this is to "replicate changes from a given NC" which is essentially the definition of a DCSync attack as it attempts to ask other domain controllers to replicate information and gain user credentials. 
+
+This information concludes that the attacker has infiltrated a system, gained domain admin rights, moved laterally across the network, and exfiltrated the domain credentials for the network. 
+
+I know now that the waldo user was used to execute this attack and that the account likely has domain admin rights itself, but I am not yet aware of how the attacker gained these rights initially. 
+
