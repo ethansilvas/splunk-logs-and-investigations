@@ -342,3 +342,17 @@ This information concludes that the attacker has infiltrated a system, gained do
 
 I know now that the waldo user was used to execute this attack and that the account likely has domain admin rights itself, but I am not yet aware of how the attacker gained these rights initially. 
 
+Knowing that lsass dumping is a prevalent credential harvesting technique, I conduct a search to see the types of programs related with event code 10 and keyword "lsass":
+
+![](Images/Pasted%20image%2020231116190124.png)
+
+I use an assumption that lower event counts can be considered out of the ordinary, or not typical behavior, and find that some of the lowest event counts are related to **notepad.exe** and **rundll32**:
+
+![](Images/Pasted%20image%2020231116190334.png)
+
+Looking further at notepad reveals only one event that Sysmon thinks is related to lsass and credential dumping:
+
+![](Images/Pasted%20image%2020231116192204.png)
+
+![](Images/Pasted%20image%2020231116192351.png)
+
