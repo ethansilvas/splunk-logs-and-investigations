@@ -472,7 +472,7 @@ There is a QueryName field that I can use to search for githubusercontent.com re
 
 Several MITRE ATT&CK techniques use PsExec and its high-level permissions to conduct attacks. Some common Sysmon event codes that relate to these attacks are 13, 11, 17, and 18. 
 
-Leveraging event code 13, which is for registry value sets, takes a lot of involvement:
+Leveraging event code 13, which is for registry value sets, takes a lot of involvement. However, using some resources like [Splunking with Sysmon](https://hurricanelabs.com/splunk-tutorials/splunking-with-sysmon-part-3-detecting-psexec-in-your-environment/) can provide some well crafted searches:
 
 ![](Images/Pasted%20image%2020231117153244.png)
 
@@ -489,6 +489,10 @@ This query will be able to tell me all the instances where **services.exe** modi
 Using Sysmon event code 11 for file creation shows that there have been execution resembling PsExec:
 
 ![](Images/Pasted%20image%2020231117154044.png)
+
+Sysmon event code 18 for pipe connections can also show a PsExec execution pattern:
+
+![](Images/Pasted%20image%2020231117154223.png)
 
 
 
