@@ -386,7 +386,23 @@ Now I have a list of only 4 programs that exhibit the behavior I'm trying to tar
 
 There are some issues with this alert since the dataset includes very few false positives and is tailored specifically for this exercise. For example, my alert could be bypassed by simply using an arbitrary load of one of the DLLs that I excluded. However, for the purposes of this exercise I was able to identify an attack pattern and create a targeted alert that would detect it. 
 
-### Practice Scenarios
+### Further Detection Practice
 
-#### 
+#### Find the other process that dumped credentials with lsass
+
+This is simple as I can go back to my finalized alert for the attack and look at some of the TargetImages:
+
+![](Images/Pasted%20image%2020231116201157.png)
+
+From there I can see that, in addition to notepad.exe, rundll32.exe was also using lsass for credential dumping:
+
+![](Images/Pasted%20image%2020231116201105.png)
+
+#### Find the method rundll32.exe dumped lsass
+
+I start by creating a target search to see all the events that have the source program as rundll32.exe and target program as lsass:
+
+![](Images/Pasted%20image%2020231116202928.png)
+
+From the search I extracted the unique call traces and found many DLLs being used. After a little research I found that one of the DLLs, comsvcs.dll, is actually a common dumping DLL. 
 
