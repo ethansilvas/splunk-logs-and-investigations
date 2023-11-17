@@ -432,6 +432,23 @@ This was as simple as looking for any IPs that rundll32.exe or notepad.exe were 
 
 10.0.0.186 and 10.0.0.91 appear to be the command and control servers. 
 
+#### Find the port that one of the two C2 server IPs used to connect to one of the compromised machines
 
+I started with a broad search to see any mention of the two IP addresses:
 
+![](Images/Pasted%20image%2020231116223752.png)
+
+Since in this case I only care about network connections, I filter to see all events with event code 3:
+
+![](Images/Pasted%20image%2020231116223913.png)
+
+Digging into one of the events gives me an idea of some of the key fields that I want to investigate further:
+
+![](Images/Pasted%20image%2020231116224035.png)
+
+Since I don't know which of the IPs connected to the compromised machine, I simply extract all of the source IPs and their correlating destination ports:
+
+![](Images/Pasted%20image%2020231116223648.png)
+
+From these results I can conclude that the C2 IP 10.0.0.186 used the Remote Desktop Protocol port 3389 to connect to the compromised machines. 
 
