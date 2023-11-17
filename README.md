@@ -356,3 +356,37 @@ Looking further at notepad reveals only one event that Sysmon thinks is related 
 
 ![](Images/Pasted%20image%2020231116192351.png)
 
+#### Meaningful Alerts
+
+In the previous section I found that APIs were called from UNKNOWN memory regions and that this eventually lead to the DSSync attack that I investigated. I can now create an alert that detects this to hopefully be able to prevent similar attacks in the future. 
+
+First I want to know more about the UNKNOWN memory location usage so I search to see the related event codes:
+
+![](Images/Pasted%20image%2020231116192929.png)
+
+The results show that the only related event code is 10 which is for process access, so I know now that I am looking for events that attempt to open handles to other processes that don't have a memory location mapped to the disk. 
+
+Getting an idea of the types of programs related to this behavior results in a lot of unproblematic results:
+
+![](Images/Pasted%20image%2020231116193217.png)
+
+I want to filter out a lot of these normal instances so I begin by removing any events where the source program tries to access itself, which the attack I investigated did not do:
+
+![](Images/Pasted%20image%2020231116193718.png)
+
+To further filter the programs I exclude anything C# related by excluding any .net, ni.dll, or clr.dll references: 
+
+![](Images/Pasted%20image%2020231116194355.png)
+
+Another instance to remove is anything related to WOW64 because it has a non-harmful phenomenon that comprises regions of memory that are unknown:
+
+![](Images/Pasted%20image%2020231116194549.png)
+
+Anything related to explorer will be much harder to find because, as seen by the high event count, there are many non-malicious events that it produces so it would result in a lot of noise for my alert. I choose to remove this explicitly through the SourceImage field:
+
+![](Images/Pasted%20image%2020231116194826.png)
+
+Now I have a list of only 4 programs that exhibit the behavior I'm trying to target with my alert. I could then analyze and possibly filter out more non-threatening programs but for now this is an alert that could work to prevent the domain admin credential harvesting I identified earlier. 
+
+There are some issues with this alert since the dataset includes very few false positives and is tailored specifically for this exercise. For example, my alert could be bypassed by simply using an arbitrary load of one of the DLLs that I excluded. However, for the purposes of this exercise I was able to identify an attack pattern and create a targeted alert that would detect it. 
+
