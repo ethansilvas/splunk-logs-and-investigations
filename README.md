@@ -240,8 +240,35 @@ There were many fields to edit such as protocol, dest_port, dest_host, and dest_
 
 ![](Images/Pasted%20image%2020231115195725.png)
 
+## Investigating With Splunk
 
-## Notes 
+This section will cover real-world intrusion detection scenarios with a large dataset and mimic the techniques that blue teams would use when hunting for attacks in an organization. 
+### Intrusion Detection
 
-rex max_match=0 will capture all occurrences, default is only the first occurrence
+Now that I have explored the dataset with various SPL searches and functions, I will now use common techniques to identify different types of attacks that are present in the over 500,000 events that the data holds. 
+
+#### Search Performance Optimization
+
+First I will start by looking for attacks in the Sysmon data, and to get a broad look of it I do a simple command to see how many events exist for Sysmon:
+
+![](Images/Pasted%20image%2020231116132024.png)
+
+I want to compare the performance differences between SPL searches, so I do the same search for the system name "uniwaldo.local" but with and without wildcards:
+
+![](Images/Pasted%20image%2020231116132833.png)
+![](Images/Pasted%20image%2020231116132845.png)
+
+I get the same amount of events found but the time it took to get the results with wildcards was significantly longer than without because it was matching to many more events. 
+
+Another example with the same search to improve performance and get more accurate results is to specify the field, assuming I know what field I expect the keyword to be in: 
+
+![](Images/Pasted%20image%2020231116133936.png)
+
+#### Using Attacker Mindset
+
+Event codes in the Sysmon data can give me an idea of the attacks that attackers use against a system or network because they each signal specific processes being performed on a host. 
+
+I start by taking a look at the number of events related to each of the Sysmon event codes existing in the data:
+
+![](Images/Pasted%20image%2020231116135140.png)
 
