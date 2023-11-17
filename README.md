@@ -424,6 +424,14 @@ Unsurprisingly I found that both notepad.exe and rundll32.exe, from my original 
 
 #### Find the two IP addresses of the C2 callback server
 
+This was as simple as looking for any IPs that rundll32.exe or notepad.exe were connection to:
+
+![](Images/Pasted%20image%2020231116222606.png)
+
+![](Images/Pasted%20image%2020231116222618.png)
+
+10.0.0.186 and 10.0.0.91 appear to be the command and control servers. 
+
 
 
 
