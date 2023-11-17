@@ -183,7 +183,7 @@ With this command I count the number events based on index, sourcetype, source, 
 
 ### Practice Queries
 
-#### Q1. Find the account name with the highest amount of Kerberos authentication ticket requests
+#### Find the account name with the highest amount of Kerberos authentication ticket requests
 
 Since I don't know which Event Code the Kerberos authentication ticket request is, I do a simple search for "kerberos authentication" to see that it is 4768:
 
@@ -194,7 +194,7 @@ Then I can do a search on Event Code 4768 that counts all the Account_Name field
 ![](Images/Pasted%20image%2020231115145321.png)
 
 The account named "waldo" submitted the highest number of Kerberos authentication requests. 
-#### Q2. Find the number of distinct computers accessed by the account name SYSTEM in all Event Code 4624 events
+#### Find the number of distinct computers accessed by the account name SYSTEM in all Event Code 4624 events
 
 Since this query is much more specific I can instantly grab this info by getting all events with Event Code 4624 and that have the Account_Name SYSTEM, then using dedup to get all of the unique ComputerName values:
 
@@ -240,14 +240,10 @@ There were many fields to edit such as protocol, dest_port, dest_host, and dest_
 
 ![](Images/Pasted%20image%2020231115195725.png)
 
-## Investigating With Splunk
+## Intrusion Detection With Splunk
 
-This section will cover real-world intrusion detection scenarios with a large dataset and mimic the techniques that blue teams would use when hunting for attacks in an organization. 
-### Intrusion Detection
-
-Now that I have explored the dataset with various SPL searches and functions, I will now use common techniques to identify different types of attacks that are present in the over 500,000 events that the data holds. 
-
-#### Search Performance Optimization
+This section will cover real-world intrusion detection scenarios and mimic the techniques that blue teams would use when hunting for attacks in an organization. I will use common techniques to identify different types of attacks that are present in the over 500,000 events that the data holds. 
+### Search Performance Optimization
 
 First I will start by looking for attacks in the Sysmon data, and to get a broad look of it I do a simple command to see how many events exist for Sysmon:
 
@@ -264,7 +260,7 @@ Another example with the same search to improve performance and get more accurat
 
 ![](Images/Pasted%20image%2020231116133936.png)
 
-#### Using Attacker Mindset
+### Using Attacker Mindset
 
 Event codes in the Sysmon data can give me an idea of the attacks that attackers use against a system or network because they each signal specific processes being performed on a host. 
 
@@ -356,7 +352,7 @@ Looking further at notepad reveals only one event that Sysmon thinks is related 
 
 ![](Images/Pasted%20image%2020231116192351.png)
 
-#### Meaningful Alerts
+### Meaningful Alerts
 
 In the previous section I found that APIs were called from UNKNOWN memory regions and that this eventually lead to the DSSync attack that I investigated. I can now create an alert that detects this to hopefully be able to prevent similar attacks in the future. 
 
@@ -389,4 +385,8 @@ Anything related to explorer will be much harder to find because, as seen by the
 Now I have a list of only 4 programs that exhibit the behavior I'm trying to target with my alert. I could then analyze and possibly filter out more non-threatening programs but for now this is an alert that could work to prevent the domain admin credential harvesting I identified earlier. 
 
 There are some issues with this alert since the dataset includes very few false positives and is tailored specifically for this exercise. For example, my alert could be bypassed by simply using an arbitrary load of one of the DLLs that I excluded. However, for the purposes of this exercise I was able to identify an attack pattern and create a targeted alert that would detect it. 
+
+### Practice Scenarios
+
+#### 
 
