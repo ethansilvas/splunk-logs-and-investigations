@@ -494,7 +494,9 @@ Sysmon event code 18 for pipe connections can also show a PsExec execution patte
 
 ![](Images/Pasted%20image%2020231117154223.png)
 
+Archive or zipped files are typically used for data exfiltration, so using event code 11 I can filter for these types of file creations and see some concerning results:
 
+![](Images/Pasted%20image%2020231117161312.png)
 
 
 
