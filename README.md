@@ -527,3 +527,32 @@ Finally, one of the most common tactics is using non-standard ports for communic
 This was very simple to find as the attacker often used command line arguments to enter in the password. I simply looked for any reference to the phrase "password" in Sysmon events and found a PsExec related event with the password stated in the CommandLine field:
 
 ![](Images/Pasted%20image%2020231117170249.png)
+
+## Detecting Attacker Behavior with Anomaly Detection
+
+Rather than focusing on specific attacker TTPs and crafting searches to target them, another method of detection is by using statistics/analytics to capture abnormal behavior compared to a baseline of "normal" behavior. 
+
+Splunk provides many options to do this, including the **streamstats** command:
+
+![](Images/Pasted%20image%2020231118144946.png)
+
+Streamstats lets me capture real-time analytics on the data to better identify anomalies that may exist. In the above example:
+
+`bin time span=1h` = groups the event code 3 events into hourly intervals
+
+`streamstats time_window=24h avg(NetworkConnections) as avg stdev(NetworkConnections) as stdev by Image` = creates rolling 24-hour averages and standard deviations of the number of network connections for each unique process image
+
+These statistics create the baseline of normal behavior to which I can then extract any events that are outside of the range that I specify with: `eval isOutlier=if(NetworkConnections > (avg + (0.5 * stdev)), 1, 0)`
+
+### SPL Searches Based on Analytics
+
+One of the simpler ways to search for anomalies is by looking for really long commands. Attackers often need to execute complex commands to do their tasks so searching based on the length of the CommandLine field can be effective:
+
+![](Images/Pasted%20image%2020231118151907.png)
+
+
+
+
+
+
+
