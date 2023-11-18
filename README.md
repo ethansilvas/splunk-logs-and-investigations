@@ -516,3 +516,7 @@ Even though it takes a bit of manual involvement, another attribute to look for 
 
 ![](Images/Pasted%20image%2020231117164757.png)
 
+Finally, one of the most common tactics is using non-standard ports for communications and data transfers. Searching for this can be as simple as looking for all network connections, event code 3, that aren't using typical ports:
+
+![](Images/Pasted%20image%2020231117165520.png)
+
