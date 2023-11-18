@@ -556,7 +556,11 @@ I can also use the same technique of looking for a baseline and apply it to unus
 
 The above baseline is relatively simple as it looks for average/stdev of the number of commands being run with cmd.exe. 
 
+Another anomaly that is often exhibited by malware is a high amount of DLLs being loaded within a short amount of time. This can often be done by non-malicious activity as well, but it is still something to check. 
 
+Here I try to filter out as many benign processes that could exhibit this behavior and then extract all of the events where more than 3 unique DLLs are loaded within an hour:
+
+![](Images/Pasted%20image%2020231118154658.png)
 
 
 
