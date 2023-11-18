@@ -508,3 +508,7 @@ There are also ways to detect execution from unusual places, for example in this
 
 ![](Images/Pasted%20image%2020231117163246.png)
 
+Another sign of malicious activity is the creation of DLL and executable files outside of the Windows directory:
+
+![](Images/Pasted%20image%2020231117163625.png)
+
