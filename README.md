@@ -504,3 +504,7 @@ A common way to actually download the payloads that attackers are hosting is thr
 
 ![](Images/Pasted%20image%2020231117161841.png)
 
+There are also ways to detect execution from unusual places, for example in this search I look for process creations in the downloads folder using event code 1:
+
+![](Images/Pasted%20image%2020231117163246.png)
+
