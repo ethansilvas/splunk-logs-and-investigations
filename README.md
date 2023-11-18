@@ -550,6 +550,13 @@ One of the simpler ways to search for anomalies is by looking for really long co
 
 ![](Images/Pasted%20image%2020231118151907.png)
 
+I can also use the same technique of looking for a baseline and apply it to unusual cmd.exe activity:
+
+![](Images/Pasted%20image%2020231118152653.png)
+
+The above baseline is relatively simple as it looks for average/stdev of the number of commands being run with cmd.exe. 
+
+
 
 
 
