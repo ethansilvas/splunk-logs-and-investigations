@@ -520,3 +520,10 @@ Finally, one of the most common tactics is using non-standard ports for communic
 
 ![](Images/Pasted%20image%2020231117165520.png)
 
+### Practice Investigation
+
+#### Find the password utilized during the PsExec activity
+
+This was very simple to find as the attacker often used command line arguments to enter in the password. I simply looked for any reference to the phrase "password" in Sysmon events and found a PsExec related event with the password stated in the CommandLine field:
+
+![](Images/Pasted%20image%2020231117170249.png)
