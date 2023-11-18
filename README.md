@@ -512,3 +512,7 @@ Another sign of malicious activity is the creation of DLL and executable files o
 
 ![](Images/Pasted%20image%2020231117163625.png)
 
+Even though it takes a bit of manual involvement, another attribute to look for is the misspelling of common programs. In this case I look for a misspelling of the PsExec files:
+
+![](Images/Pasted%20image%2020231117164757.png)
+
