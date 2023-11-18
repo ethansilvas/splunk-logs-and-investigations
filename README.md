@@ -498,5 +498,9 @@ Archive or zipped files are typically used for data exfiltration, so using event
 
 ![](Images/Pasted%20image%2020231117161312.png)
 
+A common way to actually download the payloads that attackers are hosting is through powershell or MS Edge while also targeting **Zone.Identifier** which signals files downloaded from the internet or untrustworthy sources:
 
+![](Images/Pasted%20image%2020231117161638.png)
+
+![](Images/Pasted%20image%2020231117161841.png)
 
