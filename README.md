@@ -572,8 +572,80 @@ Looking at some of the previously found malicious programs I can see that this b
 
 ![](Images/Pasted%20image%2020231118160103.png)
 
+### Practice Scenario
 
+#### Find the source process image that has created an unusually high number of threads in other processes (greater than 2 standard deviations)
 
+To start looking for this process, I first want to know more about the events that I should be looking for. Sysmon event code 8 is for remote thread creation so I check all of these events where the SourceImage field is not the same as the TargetImage:
 
+![](Images/Pasted%20image%2020231118162553.png)
 
+Then, using a similar search to those I had done previously, I looked for events where the number of threads created exceeded 2 standard deviations:
 
+![](Images/Pasted%20image%2020231118162700.png)
+
+The steps of this search were to: 
+1. Bin the events into 1 hour bins
+2. Count the number of threads created based on the source and target images
+3. Calculate the average and standard deviation of the number of threads created
+4. Find all instances where the number of threads created was greater than 2 standard deviations
+
+This resulted in finding the malicious file **randomfile.exe** created multiple threads in notepad.exe. 
+
+## Finding the Source of the Intrusion
+
+Throughout the previous sections I have been investigating different parts of an attack chain that started with domain credentials being dumped which resulted in host infections and data exfiltration. There have been a number of related malicious processes, commands, and DLLS, most notably notepad.exe and rundll32.exe. 
+
+In this section I want to learn more about this attack and find its source. 
+
+### Find the process that created remote threads in rundll32.exe
+
+Finding this process was simple because doing a search on event code 8 events where the target image was rundll32.exe only resulted in one program, **randomfile.exe**:
+
+![](Images/Pasted%20image%2020231118163633.png)
+
+### Find the process that started the infection
+
+My initial thoughts on how to further investigate the start of the infection was to combine the previous findings about **randomfile.exe** with the known C2 servers that I found earlier:
+
+![](Images/Pasted%20image%2020231118170320.png)
+
+Looking into the events that this search provided reminded me of the infected users that could lead to how this infection started:
+
+![](Images/Pasted%20image%2020231118170310.png)
+
+Since the **waldo** user has been prevalent throughout this project I decided to look into the types of events that are related to this account and the C2 servers. 
+
+Interestingly, I found many events related to Sysmon event code 15 which is related to external downloads from the web:
+
+![](Images/Pasted%20image%2020231118170403.png)
+
+I wanted to focus on these event code 15 events so I started by first getting an idea of the processes that might be related to these events:
+
+![](Images/Pasted%20image%2020231118170615.png)
+
+Lots of these programs appear to be malicious based on the prior knowledge of the attack and the only one that I haven't seen before is **demon.exe**. Luckily this list is very small so I can now begin thinking in terms of a timeline. 
+
+I do a simple search to see all of the events related to the waldo user and the C2 servers, but I make sure to see the very first events that have occurred:
+
+![](Images/Pasted%20image%2020231118171921.png)
+
+From this search I can see that on 10/5/22 the first occurrence of contact with the C2 servers was an event code 15 event categorized as a "Drive-by Compromise" related to the **Run.dll** file in the user waldo's downloads folder:
+
+![](Images/Pasted%20image%2020231118171948.png)
+
+A DLL file in the downloads folder itself is suspicious and along with the fact that there is no legitimate DLL named "Run.dll" it's safe to assume this is a malicious file worth investigating. 
+
+In this search I also inspected the different target file names and saw some of the usual suspects:
+
+![](Images/Pasted%20image%2020231118172039.png)
+
+Since the Run.dll events seemed to happen before the demon.dll files, I did a quick search on it:
+
+![](Images/Pasted%20image%2020231118172532.png)
+
+![](Images/Pasted%20image%2020231118172516.png)
+
+By looking at the first ever event that occurred with Run.dll I can see that **rundll32.exe** was used to load it (Sysmon event code 7) only 8 minutes after the Run.dll file was detected as a potential drive-by compromise. 
+
+With this knowledge, I can conclude that the waldo user downloaded the malicious file Run.dll which then exploited rundll32.exe to initiate the attack. 
