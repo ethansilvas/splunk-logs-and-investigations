@@ -562,6 +562,16 @@ Here I try to filter out as many benign processes that could exhibit this behavi
 
 ![](Images/Pasted%20image%2020231118154658.png)
 
+When the same process is executed on the same computer it can often signal malicious or at least abnormal behavior. With Sysmon event code 1 I can see all the events where the same programs are started more than once. 
+
+To do this I look for instances where a process, the Image field, has more than one unique process GUID associated with it:
+
+![](Images/Pasted%20image%2020231118155856.png)
+
+Looking at some of the previously found malicious programs I can see that this behavior was related to some of the lsass dumping activity:
+
+![](Images/Pasted%20image%2020231118160103.png)
+
 
 
 
