@@ -1,7 +1,14 @@
 # Splunk Logs and Investigations
 
-in this project...
+In this project I explore a large dataset of over 500,000 events containing many different attacker TTPs using the powerful SIEM tool, [Splunk Enterprise](https://www.splunk.com/en_us/products/splunk-enterprise.html). The goals of this project are to: 
 
+1. Use many of the available Search Processing Language (SPL) tools to craft efficient and complex searches: [Splunk and SPL](#splunk-and-spl)
+2. Create effective intrusion detection searches and alerts based on: 
+	1. Attacker TTPs and known behavior: [Detecting Attacker TTPs](#detecting-attacker-ttps)
+	2. Anomaly detection: [Detecting Attacker Behavior with Anomaly Detection](#detecting-attacker-behavior-with-anomaly-detection)
+3. Discover many of the detected elements, methods, processes, etc. of an attack and develop a timeline of how the attacker gained initial access: [Intrusion Detection With Splunk](#intrusion-detection-with-splunk) -> [Finding the Source of the Intrusion](#finding-the-source-of-the-intrusion)
+
+Through this project I have gained a comprehensive understanding of Splunk's architecture, written many detection-related SPL searches, and applied attacker TTPs and analytics for defensive cybersecurity tasks. I am now well prepared to leverage Splunk in real-world log analysis, detection, and incident response scenarios. 
 ## Table of Contents
 
 - [Splunk and SPL](#splunk-and-spl)
@@ -23,7 +30,6 @@ in this project...
 - [Finding the Source of the Intrusion](#finding-the-source-of-the-intrusion)
 	- [Find the process that created remote threads in rundll32.exe](#find-the-process-that-created-remote-threads-in-rundll32exe)
 	- [Find the process that started the infection](#find-the-process-that-started-the-infection)
-
 
 ## Splunk and SPL
 
@@ -620,7 +626,7 @@ This resulted in finding the malicious file **randomfile.exe** created multiple 
 
 Throughout the previous sections I have been investigating different parts of an attack chain that started with domain credentials being dumped which resulted in host infections and data exfiltration. There have been a number of related malicious processes, commands, and DLLS, most notably notepad.exe and rundll32.exe. 
 
-In this section I want to learn more about this attack and find its source. 
+In this section I want to learn more about this attack and find its original method of intrusion. 
 
 ### Find the process that created remote threads in rundll32.exe
 
@@ -672,4 +678,4 @@ Since the Run.dll events seemed to happen before the demon.dll files, I did a qu
 
 By looking at the first ever event that occurred with Run.dll I can see that **rundll32.exe** was used to load it (Sysmon event code 7) only 8 minutes after the Run.dll file was detected as a potential drive-by compromise. 
 
-With this knowledge, I can conclude that the waldo user downloaded the malicious file Run.dll which then exploited rundll32.exe to initiate the attack. 
+With this knowledge, I can conclude that the waldo user downloaded the malicious file Run.dll which then exploited rundll32.exe to initiate the attack.
